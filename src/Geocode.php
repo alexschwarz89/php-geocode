@@ -23,6 +23,13 @@ class Geocode
     private $serviceResults;
 
     /**
+     * Contains an ISO 3166-A-2 Country Code
+     *
+     * @var string
+     */
+    private $region;
+
+    /**
      * Constructor
      *
      * @param string $key Google Maps Geocoding API key
@@ -32,6 +39,17 @@ class Geocode
         $this->serviceUrl = (!empty($key))
             ? 'https' . $this->serviceUrl . "key={$key}"
             : 'http' . $this->serviceUrl;
+    }
+
+    /**
+     * Sets google maps region parameter
+     * Example: "US" for United States
+     *
+     * @param $region
+     */
+    public function setRegion($region)
+    {
+        $this->region = $region;
     }
 
     /**
@@ -60,6 +78,11 @@ class Geocode
         }
 
         $url = $this->getServiceUrl() . "&address=" . urlencode($address);
+
+        if (!empty($this->region)) {
+            $url .= '&region=' . urlencode($this->region);
+        }
+
         $ch  = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);

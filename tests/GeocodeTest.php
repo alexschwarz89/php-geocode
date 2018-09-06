@@ -4,13 +4,27 @@ namespace KamranAhmed\Geocode;
 
 class GeocodeTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @dataProvider providerTestGeocodeProvider
      */
     public function testGeocode($address, $expected)
     {
         $actual   = new Geocode();
+        $location = $actual->get($address);
+        $methods  = array_keys($expected);
+        $this->assertTrue($location->isValid());
+        foreach ($methods as $method) {
+            $this->assertEquals($expected[$method], $location->$method());
+        }
+    }
+
+    /**
+     * @dataProvider providerTestGeocodeProvider
+     */
+    public function testGeocodeWithRegion($address, $expected)
+    {
+        $actual   = new Geocode();
+        $actual->setRegion('US');
         $location = $actual->get($address);
         $methods  = array_keys($expected);
         $this->assertTrue($location->isValid());
